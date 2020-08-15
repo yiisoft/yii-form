@@ -7,6 +7,7 @@ namespace Yiisoft\Form;
 use Closure;
 use InvalidArgumentException;
 use ReflectionClass;
+use ReflectionMethod;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\ValidatorFactoryInterface;
@@ -14,6 +15,8 @@ use Yiisoft\Validator\ValidatorFactoryInterface;
 use function array_key_exists;
 use function array_merge;
 use function get_object_vars;
+use function is_callable;
+use function property_exists;
 use function reset;
 use function sprintf;
 
@@ -328,9 +331,17 @@ abstract class FormModel implements FormModelInterface
 
     private function readProperty(string $attribute)
     {
-        $class = get_class($this);
+        $class = static::class;
         if (!property_exists($class, $attribute)) {
             throw new InvalidArgumentException("Undefined property: \"$class::$attribute\".");
+        }
+
+        $getter = 'get' . $this->getInflector()->camelize($attribute) . 'Attribute';
+        if (is_callable([$this, $getter])) {
+            $method = new ReflectionMethod($class, $getter);
+            if ($method->getNumberOfRequiredParameters() === 0) {
+                return $this->$getter();
+            }
         }
 
         if ($this->isPublicAttribute($attribute)) {
@@ -345,6 +356,15 @@ abstract class FormModel implements FormModelInterface
 
     private function writeProperty(string $attribute, $value): void
     {
+        $setter = 'set' . $this->getInflector()->camelize($attribute) . 'Attribute';
+        if (is_callable([$this, $setter])) {
+            $method = new ReflectionMethod(static::class, $setter);
+            if ($method->getNumberOfRequiredParameters() === 1) {
+                $this->$setter($value);
+                return;
+            }
+        }
+
         if ($this->isPublicAttribute($attribute)) {
             $this->$attribute = $value;
         } else {

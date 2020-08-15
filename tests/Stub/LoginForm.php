@@ -27,9 +27,19 @@ class LoginForm extends FormModel
         return $this->login;
     }
 
+    public function getLoginAttribute(): ?string
+    {
+        return $this->login !== null ? 'app-' . $this->login : null;
+    }
+
     public function getPassword(): ?string
     {
         return $this->password;
+    }
+
+    public function getPasswordAttribute(bool $param): ?string
+    {
+        return 'wrong';
     }
 
     public function getRememberMe(): bool
@@ -42,9 +52,19 @@ class LoginForm extends FormModel
         $this->login = $value;
     }
 
+    public function setLoginAttribute(string $value): void
+    {
+        $this->login = 'app-' . $value;
+    }
+
     public function password(string $value): void
     {
         $this->password = $value;
+    }
+
+    public function setPasswordAttribute(): void
+    {
+        $this->password = 'wrong';
     }
 
     public function rememberMe(bool $value): void

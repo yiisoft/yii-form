@@ -8,8 +8,6 @@ use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Form\FormModelInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
-use function array_merge;
-use function array_unique;
 use function array_values;
 
 final class ErrorSummary extends Widget
@@ -28,14 +26,14 @@ final class ErrorSummary extends Widget
     {
         $new = clone $this;
 
-        $header = $new->options['header'] ?? '<p>' . 'Please fix the following errors:' . '</p>';
+        $header = $new->options['header'] ?? '<p>Please fix the following errors:</p>';
         $footer = ArrayHelper::remove($new->options, 'footer', '');
         $encode = ArrayHelper::remove($new->options, 'encode', true);
         $showAllErrors = ArrayHelper::remove($new->options, 'showAllErrors', false);
 
         unset($new->options['header']);
 
-        $lines = $new->collectErrors($encode, $showAllErrors);
+        $lines = $new->collectErrors($new->data, $encode, $showAllErrors);
 
         if (empty($lines)) {
             /** still render the placeholder for client-side validation use */
@@ -78,15 +76,9 @@ final class ErrorSummary extends Widget
      *
      * @return array of the validation errors.
      */
-    private function collectErrors(bool $encode, bool $showAllErrors): array
+    private function collectErrors(FormModelInterface $form, bool $encode, bool $showAllErrors): array
     {
-        $new = clone $this;
-
-        $lines = [];
-
-        foreach ([$new->data] as $form) {
-            $lines = array_unique(array_merge($lines, $form->getErrorSummary($showAllErrors)));
-        }
+        $lines = $form->getErrorSummary($showAllErrors);
 
         /**
          * If there are the same error messages for different attributes, array_unique will leave gaps between

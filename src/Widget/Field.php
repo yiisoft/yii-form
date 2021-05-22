@@ -102,7 +102,7 @@ final class Field extends Widget
     {
         $new = clone $this;
 
-        $inputId = $new->addInputId();
+        $inputId = $new->getInputId();
 
         $class = [];
         $class[] = "field-$inputId";
@@ -745,7 +745,7 @@ final class Field extends Widget
         return $this;
     }
 
-    private function addInputId(): string
+    private function getInputId(): string
     {
         return $this->inputId ?: HtmlForm::getInputId($this->data, $this->attribute);
     }
@@ -921,7 +921,7 @@ final class Field extends Widget
         if ($this->validationStateOn === 'input') {
             $attributeName = HtmlForm::getAttributeName($this->attribute);
 
-            if ($this->data->hasErrors($attributeName)) {
+            if ($this->data->isValidated() && $this->data->hasErrors($attributeName)) {
                 /**
                  * @psalm-suppress PossiblyNullPropertyAssignmentValue
                  */
@@ -935,7 +935,7 @@ final class Field extends Widget
         if ($this->validationStateOn === 'input') {
             $attributeName = HtmlForm::getAttributeName($this->attribute);
 
-            if (!$this->data->hasErrors($attributeName) && $this->data->isValidated()) {
+            if ($this->data->isValidated() && !$this->data->hasErrors($attributeName)) {
                 /**
                  * @psalm-suppress PossiblyNullPropertyAssignmentValue
                  */
@@ -970,7 +970,8 @@ final class Field extends Widget
     private function setAriaAttributes(array $options = []): void
     {
         if ($this->ariaAttribute) {
-            if (!isset($options['aria-invalid']) && $this->data->hasErrors($this->attribute)) {
+            $attributeName = HtmlForm::getAttributeName($this->attribute);
+            if (!isset($options['aria-invalid']) && $this->data->isValidated() && $this->data->hasErrors($attributeName)) {
                 $this->inputOptions['aria-invalid'] = 'true';
             }
         }

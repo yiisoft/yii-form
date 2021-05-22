@@ -70,7 +70,7 @@ HTML;
         $expected = <<<'HTML'
 <div class="form-group field-personalform-0-name">
 <label class="control-label" for="personalform-0-name">Name</label>
-<input type="text" id="personalform-0-name" class="form-control has-error" name="PersonalForm[0][name]" value="yii" placeholder="Name">
+<input type="text" id="personalform-0-name" class="form-control has-error" name="PersonalForm[0][name]" value="yii" aria-invalid="true" placeholder="Name">
 
 <div class="help-block">Is too short.</div>
 </div>

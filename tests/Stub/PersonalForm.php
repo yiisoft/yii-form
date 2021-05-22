@@ -14,8 +14,8 @@ use Yiisoft\Validator\Rule\Required;
 final class PersonalForm extends FormModel
 {
     private ?int $id = null;
-    private ?string $email = null;
     private ?string $name = null;
+    private ?string $email = null;
     private ?string $имя = null;
     private ?string $password = null;
     private ?string $address = null;

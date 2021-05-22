@@ -66,6 +66,15 @@ interface FormModelInterface extends DataSetInterface
     public function getAttributeHint(string $attribute): string;
 
     /**
+     * Returns the specified attribute.
+     *
+     * @param string $attribute the attribute name.
+     *
+     * @return FormAttribute an instance of attribute.
+     */
+    public function getAttribute(string $attribute): FormAttribute;
+
+    /**
      * Returns a value indicating whether the attribute is required.
      *
      * This is determined by checking if the attribute is associated with a {@see \Yiisoft\Validator\Rule\Required}
@@ -76,14 +85,6 @@ interface FormModelInterface extends DataSetInterface
      * @return bool whether the attribute is required.
      */
     public function isAttributeRequired(string $attribute): bool;
-
-    /**
-     * Add error for the specified attribute.
-     *
-     * @param string $attribute attribute name.
-     * @param string $error attribute error message.
-     */
-    public function addError(string $attribute, string $error): void;
 
     /**
      * Returns the errors for all attributes.

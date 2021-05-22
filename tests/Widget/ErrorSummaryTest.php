@@ -66,7 +66,10 @@ final class ErrorSummaryTest extends TestCase
 
         $validator->validate($data);
 
-        $html = ErrorSummary::widget()->config($data, $options)->run();
+        $html = ErrorSummary::widget()
+            ->config($data, $options)
+            ->run();
+
         $this->assertEqualsWithoutLE($expected, $html);
     }
 

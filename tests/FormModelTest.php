@@ -251,28 +251,6 @@ final class FormModelTest extends TestCase
         $this->assertIsString($form->getAttributeValue('string'));
     }
 
-    public function testAddError(): void
-    {
-        $form = new LoginForm();
-        $errorMessage = 'Invalid password.';
-
-        $form->addError('password', $errorMessage);
-
-        $this->assertTrue($form->hasErrors());
-        $this->assertEquals($errorMessage, $form->getFirstError('password'));
-    }
-
-    public function testAddAndGetErrorForNonExistingAttribute(): void
-    {
-        $form = new LoginForm();
-        $errorMessage = 'Invalid username and/or password.';
-
-        $form->addError('form', $errorMessage);
-
-        $this->assertTrue($form->hasErrors());
-        $this->assertEquals($errorMessage, $form->getFirstError('form'));
-    }
-
     public function testValidatorRules(): void
     {
         $validator = $this->createValidatorMock();
